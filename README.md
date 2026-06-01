@@ -24,14 +24,19 @@ pnpm dev
 
 Asegúrate de tener el backend en `http://127.0.0.1:5219` (ver `.env.development`).
 
-## Producción
+## Producción local
 
 ```bash
 pnpm build
 pnpm preview
 ```
 
-La URL del API en producción está en `.env.production`.
+## Despliegue en Netlify
+
+Guía paso a paso: **[DEPLOY_NETLIFY.md](./DEPLOY_NETLIFY.md)**
+
+Resumen: conecta el repo en Netlify; `netlify.toml` define build, proxy al API y rutas SPA.  
+No configures `VITE_API_URL` en Netlify (déjala vacía).
 
 ## Stack de autenticación
 

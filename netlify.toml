@@ -1,0 +1,30 @@
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  command = "pnpm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Vacío = el frontend llama a /login y /api en el mismo dominio de Netlify.
+  # Netlify reenvía esas rutas al backend (ver [[redirects]] abajo).
+  VITE_API_URL = ""
+
+# Proxy al API (evita CORS y mixed content HTTPS → HTTP)
+[[redirects]]
+  from = "/login"
+  to = "http://investigation2prograiv.runasp.net/login"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://investigation2prograiv.runasp.net/api/:splat"
+  status = 200
+  force = true
+
+# React Router (SPA): rutas del cliente → index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

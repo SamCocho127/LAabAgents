@@ -1,0 +1,4 @@
+# Respaldo SPA (Netlify también usa netlify.toml)
+/api/*  http://investigation2prograiv.runasp.net/api/:splat  200!
+/login  http://investigation2prograiv.runasp.net/login  200!
+/*      /index.html  200
