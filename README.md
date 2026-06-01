@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+# Gestión de Bibliotecas (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React + Vite para la Investigación 2 (JWT).
 
-Currently, two official plugins are available:
+## Repositorios y despliegue
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Recurso | URL |
+|---------|-----|
+| Repositorio frontend | https://github.com/SamCocho127/LAabAgents.git |
+| Repositorio backend | https://github.com/SamCocho127/LibrariesApiTestInvestigacion.git |
+| API desplegada | http://investigation2prograiv.runasp.net/ |
 
-## React Compiler
+## Credenciales demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Usuario: `admin`
+- Contraseña: `1234`
 
-## Expanding the ESLint configuration
+## Desarrollo local
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Asegúrate de tener el backend en `http://127.0.0.1:5219` (ver `.env.development`).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Producción
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm build
+pnpm preview
 ```
+
+La URL del API en producción está en `.env.production`.
+
+## Stack de autenticación
+
+- Axios (`src/api/axiosClient.ts`, `src/services/authService.ts`)
+- React Query (`useLogin`, `QueryClientProvider` en `main.tsx`)
+- jwt-decode (`src/utils/decodeToken.ts`)
+- AuthContext (`src/context/AuthContext.tsx`)

@@ -1,5 +1,5 @@
-import { resolveApiUrl } from '../config/api'
-import { useAuthStore } from '../store/authStore'
+import axios from 'axios'
+import { api } from './axiosClient'
 
 export class ApiError extends Error {
   status?: number
@@ -11,48 +11,23 @@ export class ApiError extends Error {
   }
 }
 
-type ApiClientOptions = RequestInit & {
-  auth?: boolean
-}
-
-export async function apiClient<T>(path: string, options: ApiClientOptions = {}): Promise<T> {
-  const { auth = true, headers, ...rest } = options
-
-  const requestHeaders = new Headers(headers)
-  if (!requestHeaders.has('Content-Type') && rest.body) {
-    requestHeaders.set('Content-Type', 'application/json')
-  }
-
-  if (auth) {
-    const token = useAuthStore.getState().token
-    if (token) {
-      requestHeaders.set('Authorization', `Bearer ${token}`)
-    }
-  }
-
-  let response: Response
+export async function apiClient<T>(path: string): Promise<T> {
   try {
-    response = await fetch(resolveApiUrl(path), {
-      ...rest,
-      headers: requestHeaders,
-    })
-  } catch {
-    throw new ApiError(
-      `No se pudo conectar con el servidor en ${resolveApiUrl(path)}. Ejecuta el backend: dotnet run (puerto 5219).`,
-    )
+    const { data } = await api.get<T>(path)
+    return data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        throw new ApiError('Sesión expirada o no autorizada. Inicia sesión de nuevo.', 401)
+      }
+      if (error.code === 'ERR_NETWORK') {
+        throw new ApiError('No se pudo conectar con el servidor.')
+      }
+      throw new ApiError(
+        `Error del servidor (${error.response?.status ?? 'desconocido'})`,
+        error.response?.status,
+      )
+    }
+    throw error
   }
-
-  if (response.status === 401) {
-    throw new ApiError('Sesión expirada o no autorizada. Inicia sesión de nuevo.', 401)
-  }
-
-  if (!response.ok) {
-    throw new ApiError(`Error del servidor (${response.status})`, response.status)
-  }
-
-  if (response.status === 204) {
-    return undefined as T
-  }
-
-  return response.json() as Promise<T>
 }

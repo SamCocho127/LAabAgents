@@ -7,17 +7,19 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { login, isLoading, error, clearError } = useAuth()
+  const { login, loginLoading, loginError, clearLoginError } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    clearError()
+    clearLoginError()
 
-    const success = await login({ email, password })
-    if (success) {
+    try {
+      await login({ email, password })
       onSuccess()
+    } catch {
+      // loginError se actualiza en AuthContext
     }
   }
 
@@ -64,18 +66,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           />
         </div>
 
-        {error && (
+        {loginError && (
           <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-            {error}
+            {loginError}
           </p>
         )}
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={loginLoading}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isLoading ? 'Verificando…' : 'Entrar'}
+          {loginLoading ? 'Verificando…' : 'Entrar'}
         </button>
       </form>
 
